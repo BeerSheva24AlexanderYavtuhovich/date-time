@@ -10,6 +10,7 @@ import java.time.temporal.TemporalAdjuster;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +29,6 @@ public class DateTimeTest {
         System.out.printf("Current time is %s in ISO format \n", currentLocalTime);
         System.out.printf("Current date is %s in dd/mm/yyyy \n",
                 current.format(DateTimeFormatter.ofPattern("dd/MMMM/yyyy", Locale.forLanguageTag("he"))));
-
     }
 
     @Test
@@ -41,4 +41,20 @@ public class DateTimeTest {
                 () -> LocalTime.now().with(adjuster));
     }
 
+    @Test
+    void PastTemporalDateProximityTest() {
+
+        LocalDate date1 = LocalDate.of(2024, 6, 2);
+        LocalDate date2 = LocalDate.of(2024, 7, 30);
+        LocalDate date3 = LocalDate.now();
+        LocalDate date4 = LocalDate.of(2024, 9, 5);
+        LocalDate date5 = LocalDate.of(2024, 10, 22);
+        LocalDate[] dates = { date5, date1, date2, date4, date3 };
+        PastTemporalDateProximity adjuster = new PastTemporalDateProximity(dates);
+
+        assertEquals(date2, adjuster.adjustInto(date3));
+        assertNull(adjuster.adjustInto(date1));
+        assertEquals(date4, adjuster.adjustInto(date5));
+
+    }
 }
