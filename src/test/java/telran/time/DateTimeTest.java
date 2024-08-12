@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
+import java.time.chrono.ThaiBuddhistDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjuster;
 import java.util.Locale;
@@ -43,7 +44,7 @@ public class DateTimeTest {
 
     @Test
     void PastTemporalDateProximityTest() {
-
+        // Local
         LocalDate date1 = LocalDate.of(2024, 6, 2);
         LocalDate date2 = LocalDate.of(2024, 7, 30);
         LocalDate date3 = LocalDate.now();
@@ -56,5 +57,17 @@ public class DateTimeTest {
         assertNull(adjuster.adjustInto(date1));
         assertEquals(date4, adjuster.adjustInto(date5));
 
+        // Thai
+        ThaiBuddhistDate date6 = ThaiBuddhistDate.of(2024, 6, 2);
+        ThaiBuddhistDate date7 = ThaiBuddhistDate.of(2024, 7, 30);
+        ThaiBuddhistDate date8 = ThaiBuddhistDate.of(2024, 8, 30);
+        ThaiBuddhistDate date9 = ThaiBuddhistDate.of(2024, 9, 5);
+        ThaiBuddhistDate date10 = ThaiBuddhistDate.of(2024, 10, 22);
+        ThaiBuddhistDate[] dates2 = { date10, date6, date7, date9, date8 };
+        PastTemporalDateProximity adjusterThai = new PastTemporalDateProximity(dates2);
+
+        assertEquals(date7, adjusterThai.adjustInto(date8));
+        assertNull(adjusterThai.adjustInto(date6));
+        assertEquals(date9, adjusterThai.adjustInto(date10));
     }
 }
